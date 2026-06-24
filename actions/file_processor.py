@@ -16,14 +16,12 @@ Supported types:
   pptx    → summarize, extract_text, to_pdf
 """
 
-import os
 import re
 import json
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from datetime import datetime
 
 def _get_api_key() -> str:
     config_path = Path(__file__).resolve().parent.parent / "config" / "api_keys.json"
@@ -52,27 +50,43 @@ def _detect_type(path: Path) -> str:
                   "bash", "ps1", "lua", "r", "m", "sql", "yaml", "toml"}
     archive_exts = {"zip", "rar", "tar", "gz", "7z", "bz2", "xz"}
 
-    if ext in image_exts:  return "image"
-    if ext in video_exts:  return "video"
-    if ext in audio_exts:  return "audio"
-    if ext in code_exts:   return "code"
-    if ext in archive_exts: return "archive"
-    if ext == "pdf":       return "pdf"
-    if ext in ("docx", "doc"): return "docx"
-    if ext in ("txt", "md", "rst", "log"): return "text"
-    if ext in ("csv", "tsv"): return "csv"
-    if ext in ("xlsx", "xls", "ods"): return "excel"
-    if ext == "json":      return "json"
-    if ext == "xml":       return "xml"
-    if ext in ("pptx", "ppt"): return "pptx"
+    if ext in image_exts:
+        return "image"
+    if ext in video_exts:
+        return "video"
+    if ext in audio_exts:
+        return "audio"
+    if ext in code_exts:
+        return "code"
+    if ext in archive_exts:
+        return "archive"
+    if ext == "pdf":
+        return "pdf"
+    if ext in ("docx", "doc"):
+        return "docx"
+    if ext in ("txt", "md", "rst", "log"):
+        return "text"
+    if ext in ("csv", "tsv"):
+        return "csv"
+    if ext in ("xlsx", "xls", "ods"):
+        return "excel"
+    if ext == "json":
+        return "json"
+    if ext == "xml":
+        return "xml"
+    if ext in ("pptx", "ppt"):
+        return "pptx"
     return "unknown"
 
 
 def _file_size_str(path: Path) -> str:
     size = path.stat().st_size
-    if size < 1024:        return f"{size} B"
-    if size < 1024**2:     return f"{size/1024:.1f} KB"
-    if size < 1024**3:     return f"{size/1024**2:.1f} MB"
+    if size < 1024:
+        return f"{size} B"
+    if size < 1024**2:
+        return f"{size/1024:.1f} KB"
+    if size < 1024**3:
+        return f"{size/1024**2:.1f} MB"
     return f"{size/1024**3:.1f} GB"
 
 def _output_path(src: Path, suffix: str, new_ext: str = None) -> Path:
@@ -377,11 +391,16 @@ def _process_data(path: Path, file_type: str, action: str,
         if not col or col not in df.columns:
             return f"Column '{col}' not found. Available: {', '.join(df.columns)}"
         try:
-            if condition == "equals":     filtered = df[df[col] == value]
-            elif condition == "contains": filtered = df[df[col].astype(str).str.contains(str(value), case=False)]
-            elif condition == "gt":       filtered = df[df[col] > float(value)]
-            elif condition == "lt":       filtered = df[df[col] < float(value)]
-            else:                         filtered = df[df[col] == value]
+            if condition == "equals":
+                filtered = df[df[col] == value]
+            elif condition == "contains":
+                filtered = df[df[col].astype(str).str.contains(str(value), case=False)]
+            elif condition == "gt":
+                filtered = df[df[col] > float(value)]
+            elif condition == "lt":
+                filtered = df[df[col] < float(value)]
+            else:
+                filtered = df[df[col] == value]
             out = _output_path(path, "filtered", ".csv")
             filtered.to_csv(out, index=False)
             return f"Filtered: {len(filtered)} rows match. Saved: {out.name}"
@@ -631,7 +650,7 @@ def _process_video(path: Path, action: str, params: dict, speak=None) -> str:
         end   = params.get("end",   "")
         if not _ffmpeg_available():
             return "ffmpeg not found."
-        out = _output_path(path, f"trim", path.suffix)
+        out = _output_path(path, "trim", path.suffix)
         try:
             cmd = ["ffmpeg", "-i", str(path), "-ss", str(start)]
             if end:
@@ -715,7 +734,8 @@ def _process_archive(path: Path, action: str, params: dict, speak=None) -> str:
 
     if action == "list":
         try:
-            import zipfile, tarfile
+            import zipfile
+            import tarfile
             ext = path.suffix.lower()
             if ext == ".zip":
                 with zipfile.ZipFile(path) as z:

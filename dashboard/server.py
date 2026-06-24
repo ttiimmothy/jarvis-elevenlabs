@@ -41,22 +41,22 @@ PORT        = 8000
 MAX_UPLOAD_MB = 500
 
 
-def _make_uploads_dir() -> Path:
-    """Return (and create) the cross-platform uploads folder."""
-    for candidate in [
-        Path.home() / "Downloads" / "JARVIS Uploads",
-        Path.home() / "Documents" / "JARVIS Uploads",
-        BASE_DIR / "uploads",
-    ]:
-        try:
-            candidate.mkdir(parents=True, exist_ok=True)
-            return candidate
-        except Exception:
-            pass
-    return BASE_DIR / "uploads"
+# def _make_uploads_dir() -> Path:
+#     """Return (and create) the cross-platform uploads folder."""
+#     for candidate in [
+#         Path.home() / "Downloads" / "JARVIS Uploads",
+#         Path.home() / "Documents" / "JARVIS Uploads",
+#         BASE_DIR / "uploads",
+#     ]:
+#         try:
+#             candidate.mkdir(parents=True, exist_ok=True)
+#             return candidate
+#         except Exception:
+#             pass
+#     return BASE_DIR / "uploads"
 
 
-UPLOADS_DIR = _make_uploads_dir()
+UPLOADS_DIR = BASE_DIR / "uploads"
 
 def _get_gemini_key() -> str | None:
     try:
@@ -106,11 +106,16 @@ def _ensure_network_access(port: int) -> None:
     macOS   : osascript admin dialog if the Application Firewall is on.
     Linux   : pkexec GUI → sudo -n → prints manual command as fallback.
     """
-    import sys, subprocess, os, tempfile, threading
+    import sys
+    import subprocess
+    import os
+    import tempfile
+    import threading
 
     # ── Windows ──────────────────────────────────────────────────────────────
     if sys.platform == "win32":
-        import ctypes, time
+        import ctypes
+        import time
 
         port_rule = f"JARVIS Dashboard Port {port}"
         prog_rule  = "JARVIS Dashboard Python"
@@ -317,7 +322,7 @@ def _ensure_crypto_js() -> None:
         print("[Dashboard] CryptoJS cached — will serve locally from now on.")
     except Exception as e:
         print(f"[Dashboard] CryptoJS download failed: {e}")
-        print(f"[Dashboard] Encryption will fall back to CDN load on client.")
+        print("[Dashboard] Encryption will fall back to CDN load on client")
 
 
 _ensure_crypto_js()

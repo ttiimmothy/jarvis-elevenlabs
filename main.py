@@ -6,6 +6,8 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
+import time
+import os
 
 import sounddevice as sd
 from google import genai
@@ -674,7 +676,6 @@ class JarvisLive:
                 self.ui.write_log("SYS: Shutdown requested.")
                 self.speak("Goodbye, sir.")
                 def _shutdown():
-                    import time, os
                     time.sleep(1)
                     os._exit(0)
                 threading.Thread(target=_shutdown, daemon=True).start()

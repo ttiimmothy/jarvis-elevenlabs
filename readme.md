@@ -1,7 +1,5 @@
-# 🤖 MARK XLVI (46)
-### The Ultimate Cross-Platform Personal AI Assistant — By FatihMakes
-
-> 📺 **[Watch the full setup video on YouTube](https://www.youtube.com/watch?v=BhOsnGC_sAA)**
+# 🤖 Jarvis Elevenlabs
+### The Ultimate Cross-Platform Personal AI Assistant
 
 A real-time voice AI that can hear, see, understand, and control your computer — on any OS. Supporting Windows, macOS, and Linux. Built with Gemini integration for maximum stability and performance, delivering zero subscriptions and total digital autonomy.
 
@@ -9,7 +7,7 @@ A real-time voice AI that can hear, see, understand, and control your computer �
 
 ## ✨ Overview
 
-MARK XLVI represents a massive milestone in the Jarvis series, evolving into a fully connected, highly persistent, and remote-accessible system. It completely bridges the gap between your mobile device, desktop OS, and human intent. Through real-time Gemini reasoning, Mark 46 allows you to control your PC from your phone, share large files securely, and maintain deep contextual conversations across sessions.
+Jarvis Elevenlabs represents a massive milestone in the Jarvis series, evolving into a fully connected, highly persistent, and remote-accessible system. It completely bridges the gap between your mobile device, desktop OS, and human intent. Through real-time Gemini reasoning, Mark 46 allows you to control your PC from your phone, share large files securely, and maintain deep contextual conversations across sessions.
 
 It's not just an assistant — it's an extension of your digital life.
 
@@ -29,7 +27,7 @@ It's not just an assistant — it's an extension of your digital life.
 
 ---
 
-## 🆕 What's New in XLVI
+## 🆕 What's New in Jarvis Elevenlabs
 
 - 📱 **Full Remote Phone Control** — Take command of your entire desktop operating system directly from your smartphone, anywhere, anytime.
 - 🧠 **Advanced Long-Term Memory** — Upgraded memory architecture allows Jarvis to contextually remember past interactions, preferences, and complex workflows across reboots.
@@ -43,15 +41,13 @@ It's not just an assistant — it's an extension of your digital life.
 ## ⚡ Quick Start
 
 ```bash
-git clone [https://github.com/FatihMakes/Mark-XLVI.git](https://github.com/FatihMakes/Mark-XLVI.git)
-cd Mark-XLVI
-pip install -r requirements.txt
+git clone [https://github.com/ttiimmothy/jarvis-elevenlabs.git](https://github.com/ttiimmothy/jarvis-elevenlab.git)
+cd jarvis-elevenlabs
+uv venv venv --python 3.12
+uv sync --active --frozen
 playwright install
 python main.py
-
 ```
-
-> ⚠️ **Installation Note:** To keep the repository lightweight, some OS-specific dependencies are not bundled in `requirements.txt`. If you run into a `ModuleNotFoundError`, simply install the missing package via `pip install <module_name>` for your specific system.
 
 ---
 
@@ -66,19 +62,5 @@ python main.py
 
 ---
 
-## ⚠️ License
-
-Personal and non-commercial use only.
-Licensed under **[Creative Commons BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)**.
-
----
-
-## 👤 Connect with the Creator
-
-Engineered by a developer building a real-world JARVIS-style assistant.
-⭐ **Star the repository to support the journey to Mark 100.**
-
-| Platform | Link |
-| --- | --- |
-| YouTube | [@FatihMakes](https://www.youtube.com/@FatihMakes) |
-| Instagram | [@fatihmakes](https://www.instagram.com/fatihmakes) |
+## License
+Licensed under **[GNU Lesser General Public License v2.1](LICENSE)**.

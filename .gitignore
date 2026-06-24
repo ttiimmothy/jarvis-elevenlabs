@@ -1,0 +1,8 @@
+__pycache__/
+.env
+.venv
+venv
+.DS_Store
+config
+!config/__init__.py
+setup.py

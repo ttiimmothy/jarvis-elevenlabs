@@ -13,19 +13,15 @@ from pathlib import Path
 
 import psutil
 
-from PyQt6.QtCore import (
-    QEasingCurve, QMimeData, QObject, QPointF, QRectF, QSize, Qt,
-    QTimer, QUrl, pyqtSignal,
-)
+from PyQt6.QtCore import QPointF, QRectF, Qt,  QTimer, pyqtSignal
 from PyQt6.QtGui import (
-    QBrush, QColor, QDragEnterEvent, QDropEvent, QFont, QFontDatabase,
-    QKeySequence, QLinearGradient, QPainter, QPainterPath, QPen, QPixmap,
-    QRadialGradient, QShortcut,
+    QBrush, QColor, QDragEnterEvent, QDropEvent, QFont,
+    QKeySequence, QPainter, QPen, QPixmap, QShortcut,
 )
 from PyQt6.QtWidgets import (
     QApplication, QFileDialog, QFrame, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QScrollArea, QSizePolicy, QTextEdit,
-    QVBoxLayout, QWidget, QProgressBar,
+    QMainWindow, QPushButton, QSizePolicy, QTextEdit,
+    QVBoxLayout, QWidget
 )
 
 def _base_dir() -> Path:
@@ -70,7 +66,9 @@ class C:
 
 
 def qcol(h: str, a: int = 255) -> QColor:
-    c = QColor(h); c.setAlpha(a); return c
+    c = QColor(h)
+    c.setAlpha(a)
+    return c
 
 class _SysMetrics:
     def __init__(self):
@@ -285,7 +283,8 @@ class HudCanvas(QWidget):
             img.putalpha(mk)
             buf = io.BytesIO()
             img.save(buf, format="PNG")
-            px = QPixmap(); px.loadFromData(buf.getvalue())
+            px = QPixmap()
+            px.loadFromData(buf.getvalue())
             self._face_px = px
         except Exception:
             self._face_px = None
@@ -366,14 +365,16 @@ class HudCanvas(QWidget):
             frc = 1.0 - i / 10
             a   = max(0, min(255, int(self._halo * 0.085 * frc)))
             col = qcol(C.MUTED_C if self.muted else C.PRI, a)
-            p.setPen(QPen(col, 1.5)); p.setBrush(Qt.BrushStyle.NoBrush)
+            p.setPen(QPen(col, 1.5))
+            p.setBrush(Qt.BrushStyle.NoBrush)
             p.drawEllipse(QRectF(cx - r, cy - r, r * 2, r * 2))
 
         # pulse rings
         for pr in self._pulses:
             a   = max(0, int(230 * (1.0 - pr / (fw * 0.74))))
             col = qcol(C.MUTED_C if self.muted else C.PRI, a)
-            p.setPen(QPen(col, 1.5)); p.setBrush(Qt.BrushStyle.NoBrush)
+            p.setPen(QPen(col, 1.5))
+            p.setBrush(Qt.BrushStyle.NoBrush)
             p.drawEllipse(QRectF(cx - pr, cy - pr, pr * 2, pr * 2))
 
         # spinning arc rings
@@ -384,7 +385,8 @@ class HudCanvas(QWidget):
             base   = self._rings[idx]
             a_val  = max(0, min(255, int(self._halo * (1.0 - idx * 0.18))))
             col    = qcol(C.MUTED_C if self.muted else C.PRI, a_val)
-            p.setPen(QPen(col, w_r)); p.setBrush(Qt.BrushStyle.NoBrush)
+            p.setPen(QPen(col, w_r))
+            p.setBrush(Qt.BrushStyle.NoBrush)
             angle = base
             rect  = QRectF(cx - ring_r, cy - ring_r, ring_r * 2, ring_r * 2)
             while angle < base + 360:
@@ -606,11 +608,16 @@ class LogWidget(QTextEdit):
         self._text   = self._queue.pop(0)
         self._pos    = 0
         tl = self._text.lower()
-        if   tl.startswith("you:"):    self._tag = "you"
-        elif tl.startswith("jarvis:"): self._tag = "ai"
-        elif tl.startswith("file:"):   self._tag = "file"
-        elif "err" in tl:              self._tag = "err"
-        else:                          self._tag = "sys"
+        if tl.startswith("you:"):
+            self._tag = "you"
+        elif tl.startswith("jarvis:"):
+            self._tag = "ai"
+        elif tl.startswith("file:"):
+            self._tag = "file"
+        elif "err" in tl:
+            self._tag = "err"
+        else:
+            self._tag = "sys"
         self._tmr.start(6)
 
     def _step(self):
@@ -667,10 +674,14 @@ def _file_category(path: Path) -> str:
     return _EXT_TO_CAT.get(path.suffix.lower().lstrip("."), "unknown")
 
 def _fmt_size(size: int) -> str:
-    if   size < 1024:    return f"{size} B"
-    elif size < 1024**2: return f"{size/1024:.1f} KB"
-    elif size < 1024**3: return f"{size/1024**2:.1f} MB"
-    else:                return f"{size/1024**3:.1f} GB"
+    if size < 1024:
+        return f"{size} B"
+    elif size < 1024**2:
+        return f"{size/1024:.1f} KB"
+    elif size < 1024**3:
+        return f"{size/1024**2:.1f} MB"
+    else:
+        return f"{size/1024**3:.1f} GB"
 
 
 class FileDropZone(QWidget):
@@ -701,10 +712,12 @@ class FileDropZone(QWidget):
     def dragEnterEvent(self, e: QDragEnterEvent):
         if e.mimeData().hasUrls():
             e.acceptProposedAction()
-            self._drag_over = True; self._canvas.update()
+            self._drag_over = True
+            self._canvas.update()
 
     def dragLeaveEvent(self, e):
-        self._drag_over = False; self._canvas.update()
+        self._drag_over = False
+        self._canvas.update()
 
     def dropEvent(self, e: QDropEvent):
         self._drag_over = False
@@ -720,16 +733,19 @@ class FileDropZone(QWidget):
             self._browse()
 
     def enterEvent(self, e):
-        self._hovering = True; self._canvas.update()
+        self._hovering = True
+        self._canvas.update()
 
     def leaveEvent(self, e):
-        self._hovering = False; self._canvas.update()
+        self._hovering = False
+        self._canvas.update()
 
     def current_file(self) -> str | None:
         return self._current_file
 
     def clear_file(self):
-        self._current_file = None; self._canvas.update()
+        self._current_file = None
+        self._canvas.update()
 
     def _browse(self):
         path, _ = QFileDialog.getOpenFileName(
@@ -766,42 +782,50 @@ class _DropCanvas(QWidget):
         rect = QRectF(pad, pad, W - pad * 2, H - pad * 2)
 
         bg_col = qcol("#001a24" if z._drag_over else ("#001218" if z._hovering else C.PANEL))
-        p.setBrush(QBrush(bg_col)); p.setPen(Qt.PenStyle.NoPen)
+        p.setBrush(QBrush(bg_col))
+        p.setPen(Qt.PenStyle.NoPen)
         p.drawRoundedRect(rect, 6, 6)
 
-        if z._current_file:   border_col = qcol(C.GREEN, 200)
-        elif z._drag_over:    border_col = qcol(C.PRI, 230)
-        elif z._hovering:     border_col = qcol(C.BORDER_B, 200)
-        else:                 border_col = qcol(C.BORDER, 160)
+        if z._current_file:
+            border_col = qcol(C.GREEN, 200)
+        elif z._drag_over:
+            border_col = qcol(C.PRI, 230)
+        elif z._hovering:
+            border_col = qcol(C.BORDER_B, 200)
+        else:
+            border_col = qcol(C.BORDER, 160)
 
         pen = QPen(border_col, 1.5, Qt.PenStyle.DashLine)
         pen.setDashOffset(z._dash_offset)
-        p.setPen(pen); p.setBrush(Qt.BrushStyle.NoBrush)
+        p.setPen(pen)
+        p.setBrush(Qt.BrushStyle.NoBrush)
         p.drawRoundedRect(rect, 6, 6)
 
-        if z._current_file:   self._paint_file(p, W, H)
-        elif z._drag_over:    self._paint_drag_over(p, W, H)
-        else:                 self._paint_idle(p, W, H, z._hovering)
+        if z._current_file:
+            self._paint_file(p, W, H)
+        elif z._drag_over:
+            self._paint_drag_over(p, W, H)
+        else:
+            self._paint_idle(p, W, H, z._hovering)
 
     def _paint_idle(self, p, W, H, hover):
         cx, cy = W / 2, H / 2
         col = qcol(C.PRI_DIM if not hover else C.PRI)
-        p.setPen(QPen(col, 2)); p.setBrush(Qt.BrushStyle.NoBrush)
+        p.setPen(QPen(col, 2))
+        p.setBrush(Qt.BrushStyle.NoBrush)
         p.drawLine(QPointF(cx, cy - 14), QPointF(cx, cy + 4))
         p.drawLine(QPointF(cx - 8, cy - 6), QPointF(cx, cy - 14))
         p.drawLine(QPointF(cx + 8, cy - 6), QPointF(cx, cy - 14))
         p.drawLine(QPointF(cx - 14, cy + 4), QPointF(cx + 14, cy + 4))
         p.setFont(QFont("Courier New", 8))
         p.setPen(QPen(qcol(C.PRI_DIM if not hover else C.TEXT), 1))
-        p.drawText(QRectF(0, cy + 8, W, 16), Qt.AlignmentFlag.AlignCenter,
-                   "Drop file here  or  Click to Browse")
+        p.drawText(QRectF(0, cy + 8, W, 16), Qt.AlignmentFlag.AlignCenter, "Drop file here  or  Click to Browse")
         p.setFont(QFont("Courier New", 7))
         p.setPen(QPen(qcol("#1a4a5a"), 1))
-        p.drawText(QRectF(0, cy + 24, W, 14), Qt.AlignmentFlag.AlignCenter,
-                   "Images · Video · Audio · PDF · Docs · Code · Data")
+        p.drawText(QRectF(0, cy + 24, W, 14), Qt.AlignmentFlag.AlignCenter, "Images · Video · Audio · PDF · Docs · Code · Data")
 
     def _paint_drag_over(self, p, W, H):
-        cx, cy = W / 2, H / 2
+        _, cy = W / 2, H / 2
         p.setFont(QFont("Courier New", 20))
         p.setPen(QPen(qcol(C.PRI), 1))
         p.drawText(QRectF(0, cy - 24, W, 32), Qt.AlignmentFlag.AlignCenter, "⬇")
@@ -839,7 +863,8 @@ class _DropCanvas(QWidget):
         p.setFont(QFont("Courier New", 6))
         p.setPen(QPen(qcol("#1e5c6a"), 1))
         par = str(path.parent)
-        if len(par) > 42: par = "…" + par[-41:]
+        if len(par) > 42:
+            par = "…" + par[-41:]
         p.drawText(QRectF(tx, H * 0.18 + 34, tw, 12),
                    Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, par)
 
@@ -891,8 +916,10 @@ class SetupOverlay(QWidget):
         layout.addWidget(_lbl("Configure J.A.R.V.I.S. before first boot.", 9, color=C.PRI_DIM))
         layout.addSpacing(6)
 
-        sep = QFrame(); sep.setFrameShape(QFrame.Shape.HLine)
-        sep.setStyleSheet(f"color: {C.BORDER};"); layout.addWidget(sep)
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setStyleSheet(f"color: {C.BORDER};")
+        layout.addWidget(sep)
         layout.addSpacing(4)
 
         layout.addWidget(_lbl("GEMINI API KEY", 8, color=C.TEXT_DIM,
@@ -912,17 +939,18 @@ class SetupOverlay(QWidget):
         layout.addWidget(self._key_input)
         layout.addSpacing(12)
 
-        sep2 = QFrame(); sep2.setFrameShape(QFrame.Shape.HLine)
-        sep2.setStyleSheet(f"color: {C.BORDER};"); layout.addWidget(sep2)
+        sep2 = QFrame()
+        sep2.setFrameShape(QFrame.Shape.HLine)
+        sep2.setStyleSheet(f"color: {C.BORDER};")
+        layout.addWidget(sep2)
         layout.addSpacing(4)
 
-        layout.addWidget(_lbl("OPERATING SYSTEM", 8, color=C.TEXT_DIM,
-                               align=Qt.AlignmentFlag.AlignLeft))
+        layout.addWidget(_lbl("OPERATING SYSTEM", 8, color=C.TEXT_DIM,  align=Qt.AlignmentFlag.AlignLeft))
         det_name = {"windows": "Windows", "mac": "macOS", "linux": "Linux"}[detected]
-        layout.addWidget(_lbl(f"Auto-detected: {det_name}", 8, color=C.ACC2,
-                               align=Qt.AlignmentFlag.AlignLeft))
+        layout.addWidget(_lbl(f"Auto-detected: {det_name}", 8, color=C.ACC2, align=Qt.AlignmentFlag.AlignLeft))
 
-        os_row = QHBoxLayout(); os_row.setSpacing(6)
+        os_row = QHBoxLayout()
+        os_row.setSpacing(6)
         self._os_btns: dict[str, QPushButton] = {}
         for key, label in [("windows","⊞  Windows"),("mac","  macOS"),("linux","🐧  Linux")]:
             btn = QPushButton(label)
@@ -1022,7 +1050,8 @@ class RemoteKeyOverlay(QWidget):
             return w
 
         lay.addWidget(_lbl("◈  REMOTE ACCESS", 12, True))
-        sep = QFrame(); sep.setFrameShape(QFrame.Shape.HLine)
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
         sep.setStyleSheet(f"color: {C.BORDER}; margin: 1px 0;")
         lay.addWidget(sep)
 
@@ -1043,7 +1072,8 @@ class RemoteKeyOverlay(QWidget):
 
         lay.addWidget(_lbl("Scan with phone camera to connect instantly", 8, color=C.TEXT_DIM))
 
-        sep2 = QFrame(); sep2.setFrameShape(QFrame.Shape.HLine)
+        sep2 = QFrame()
+        sep2.setFrameShape(QFrame.Shape.HLine)
         sep2.setStyleSheet(f"color: {C.BORDER}; margin: 1px 0;")
         lay.addWidget(sep2)
 
@@ -1077,7 +1107,8 @@ class RemoteKeyOverlay(QWidget):
         self._timer_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         lay.addWidget(self._timer_lbl)
 
-        btn_row = QHBoxLayout(); btn_row.setSpacing(8)
+        btn_row = QHBoxLayout()
+        btn_row.setSpacing(8)
         new_btn = QPushButton("NEW KEY")
         new_btn.setFixedHeight(32)
         new_btn.setFont(QFont("Courier New", 8, QFont.Weight.Bold))
@@ -1367,15 +1398,16 @@ class MainWindow(QMainWindow):
         lay.setContentsMargins(16, 0, 16, 0)
 
         def _badge(txt, color=C.TEXT_MED):
-            l = QLabel(txt)
-            l.setFont(QFont("Courier New", 8))
-            l.setStyleSheet(f"color: {color}; background: transparent;")
-            return l
+            label = QLabel(txt)
+            label.setFont(QFont("Courier New", 8))
+            label.setStyleSheet(f"color: {color}; background: transparent;")
+            return label
 
         lay.addWidget(_badge("MARK XLVI", C.PRI_DIM))
         lay.addStretch()
 
-        mid = QVBoxLayout(); mid.setSpacing(1)
+        mid = QVBoxLayout()
+        mid.setSpacing(1)
         title = QLabel("J.A.R.V.I.S")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title.setFont(QFont("Courier New", 17, QFont.Weight.Bold))
@@ -1389,7 +1421,8 @@ class MainWindow(QMainWindow):
         lay.addLayout(mid)
         lay.addStretch()
 
-        right_col = QVBoxLayout(); right_col.setSpacing(2)
+        right_col = QVBoxLayout()
+        right_col.setSpacing(2)
         self._clock_lbl = QLabel("00:00:00")
         self._clock_lbl.setFont(QFont("Courier New", 14, QFont.Weight.Bold))
         self._clock_lbl.setStyleSheet(f"color: {C.PRI}; background: transparent;")
@@ -1485,16 +1518,17 @@ class MainWindow(QMainWindow):
         lay.setSpacing(6)
 
         def _sec(txt):
-            l = QLabel(f"▸ {txt}")
-            l.setFont(QFont("Courier New", 7, QFont.Weight.Bold))
-            l.setStyleSheet(f"color: {C.TEXT_MED}; background: transparent;")
-            return l
+            sec_label = QLabel(f"▸ {txt}")
+            sec_label.setFont(QFont("Courier New", 7, QFont.Weight.Bold))
+            sec_label.setStyleSheet(f"color: {C.TEXT_MED}; background: transparent;")
+            return sec_label
 
         lay.addWidget(_sec("ACTIVITY LOG"))
         self._log = LogWidget()
         lay.addWidget(self._log, stretch=1)
 
-        sep = QFrame(); sep.setFrameShape(QFrame.Shape.HLine)
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
         sep.setStyleSheet(f"color: {C.BORDER}; margin: 2px 0;")
         lay.addWidget(sep)
 
@@ -1509,7 +1543,8 @@ class MainWindow(QMainWindow):
         self._file_hint.setWordWrap(True)
         lay.addWidget(self._file_hint)
 
-        sep2 = QFrame(); sep2.setFrameShape(QFrame.Shape.HLine)
+        sep2 = QFrame()
+        sep2.setFrameShape(QFrame.Shape.HLine)
         sep2.setStyleSheet(f"color: {C.BORDER}; margin: 2px 0;")
         lay.addWidget(sep2)
 
@@ -1559,7 +1594,8 @@ class MainWindow(QMainWindow):
         return w
 
     def _build_input_row(self) -> QHBoxLayout:
-        row = QHBoxLayout(); row.setSpacing(5)
+        row = QHBoxLayout()
+        row.setSpacing(5)
         self._input = QLineEdit()
         self._input.setPlaceholderText("Type a command or question…")
         self._input.setFont(QFont("Courier New", 9))
@@ -1593,12 +1629,14 @@ class MainWindow(QMainWindow):
         w = QWidget()
         w.setFixedHeight(22)
         w.setStyleSheet(f"background: {C.DARK}; border-top: 1px solid {C.BORDER};")
-        lay = QHBoxLayout(w); lay.setContentsMargins(14, 0, 14, 0)
+        lay = QHBoxLayout(w)
+        lay.setContentsMargins(14, 0, 14, 0)
 
         def _fl(txt, color=C.TEXT_MED):
-            l = QLabel(txt); l.setFont(QFont("Courier New", 7))
-            l.setStyleSheet(f"color: {color}; background: transparent;")
-            return l
+            fl_label = QLabel(txt)
+            fl_label.setFont(QFont("Courier New", 7))
+            fl_label.setStyleSheet(f"color: {color}; background: transparent;")
+            return fl_label
 
         lay.addWidget(_fl("[F4] Mute  ·  [F11] Fullscreen"))
         lay.addStretch()
@@ -1689,7 +1727,8 @@ class MainWindow(QMainWindow):
 
     def _send(self):
         txt = self._input.text().strip()
-        if not txt: return
+        if not txt:
+            return
         self._input.clear()
         self._log.append_log(f"You: {txt}")
         if self.on_text_command:
@@ -1700,7 +1739,8 @@ class MainWindow(QMainWindow):
         self.hud.speaking = (state == "SPEAKING")
 
     def _check_config(self) -> bool:
-        if not API_FILE.exists(): return False
+        if not API_FILE.exists():
+            return False
         try:
             d = json.loads(API_FILE.read_text(encoding="utf-8"))
             return bool(d.get("gemini_api_key")) and bool(d.get("os_system"))

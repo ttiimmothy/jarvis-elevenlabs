@@ -1249,7 +1249,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, face_path: str):
         super().__init__()
-        self.setWindowTitle("J.A.R.V.I.S — MARK XLVI")
+        self.setWindowTitle("Jarvis Elevenlabs")
         self.setMinimumSize(_MIN_W, _MIN_H)
         self.resize(_DEFAULT_W, _DEFAULT_H)
 
@@ -1403,7 +1403,7 @@ class MainWindow(QMainWindow):
             label.setStyleSheet(f"color: {color}; background: transparent;")
             return label
 
-        lay.addWidget(_badge("MARK XLVI", C.PRI_DIM))
+        lay.addWidget(_badge("Jarvis Elevenlabs", C.PRI_DIM))
         lay.addStretch()
 
         mid = QVBoxLayout()
@@ -1640,7 +1640,7 @@ class MainWindow(QMainWindow):
 
         lay.addWidget(_fl("[F4] Mute  ·  [F11] Fullscreen"))
         lay.addStretch()
-        lay.addWidget(_fl("FatihMakes Industries  ·  MARK XLVI  ·  CLASSIFIED"))
+        lay.addWidget(_fl("Timothy  ·  Jarvis Elevenlabs  ·  CLASSIFIED"))
         lay.addStretch()
         lay.addWidget(_fl("© STARK INDUSTRIES", C.PRI_DIM))
         return w

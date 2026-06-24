@@ -1,5 +1,5 @@
 """
-Text-to-Speech engines for MARK XL.
+Text-to-Speech engines for Jarvis Elevenlabs
 
 EdgeTTS     – free Microsoft TTS (internet required, no API key)
 Kokoro      – fully offline neural TTS (~330 MB model)
@@ -253,10 +253,7 @@ class KokoroTTSEngine:
                     torch.set_num_interop_threads(2)
                 except RuntimeError:
                     pass
-                print(
-                    f"[TTS] Kokoro on CPU — for faster speech install CUDA PyTorch:\n"
-                    "      pip install torch --index-url https://download.pytorch.org/whl/cu118"
-                )
+                print("[TTS] Kokoro on CPU — for faster speech install CUDA PyTorch:\n      pip install torch --index-url https://download.pytorch.org/whl/cu118")
         except Exception:
             device = "cpu"
 
